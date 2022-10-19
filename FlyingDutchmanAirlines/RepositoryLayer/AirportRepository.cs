@@ -21,7 +21,7 @@ namespace FlyingDutchmanAirlines.RepositoryLayer
 
         public async Task<Airport> GetAirportByID(int airportID)
         {
-            if (airportID < 0)
+            if (!airportID.isPositive())
             {
                 Console.WriteLine($"Argument Exception in GetAirportByID! " +
                     $"AirportID = {airportID}");

@@ -19,7 +19,7 @@ namespace FlyingDutchmanAirlines.RepositoryLayer
 
         public async Task CreateBooking(int customerID, int flightNumber)
         {
-            if (customerID < 0 || flightNumber < 0)
+            if (!customerID.isPositive()|| !flightNumber.isPositive())
             {
                 Console.WriteLine($"Argument Exception in CreateBooking! " +
                     $"CustomerID = {customerID}, flightNumber = {flightNumber}");
