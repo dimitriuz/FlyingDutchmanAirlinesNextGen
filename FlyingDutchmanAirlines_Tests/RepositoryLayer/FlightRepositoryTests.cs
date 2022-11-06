@@ -36,7 +36,15 @@ namespace FlyingDutchmanAirlines_Tests.RepositoryLayer
                 Destination = 2
             };
 
+            Flight flight2 = new Flight
+            {
+                FlightNumber = 10,
+                Origin = 3,
+                Destination = 4
+            };
+
             _context.Flights.Add(flight);
+            _context.Flights.Add(flight2);
 
             await _context.SaveChangesAsync();
 
@@ -66,7 +74,7 @@ namespace FlyingDutchmanAirlines_Tests.RepositoryLayer
         [ExpectedException(typeof(FlightNotFoundException))]
         public async Task GetFlightByID_Failure_DatabaseException()
         {
-            await _repository.GetFlightByFlightNumber(10);
+            await _repository.GetFlightByFlightNumber(11);
         }
     }
 }
