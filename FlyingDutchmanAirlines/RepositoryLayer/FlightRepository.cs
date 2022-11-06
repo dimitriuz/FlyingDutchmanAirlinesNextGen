@@ -3,6 +3,8 @@ using FlyingDutchmanAirlines.DatabaseLayer.Models;
 using FlyingDutchmanAirlines.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace FlyingDutchmanAirlines.RepositoryLayer
@@ -10,22 +12,23 @@ namespace FlyingDutchmanAirlines.RepositoryLayer
     public class FlightRepository
     {
         private readonly FlyingDutchmanAirlinesContext _context;
-
+        
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public FlightRepository()
+        {
+            if (Assembly.GetExecutingAssembly().FullName == Assembly.GetCallingAssembly().FullName)
+            {
+                throw new Exception("This constructor should only be used for testing");
+            }
+        }
         public FlightRepository(FlyingDutchmanAirlinesContext context)
         {
             _context = context;
         }
 
-        public async Task<Flight> GetFlightByFlightNumber(int flightNumber, int originAirportId, int destinationAirportId)
+        public virtual async Task<Flight> GetFlightByFlightNumber(int flightNumber)
         {
            
-            if (!originAirportId.isPositive() || !destinationAirportId.isPositive())
-            {
-                Console.WriteLine($"Argument Exception in GetFlightByFlightNumber! " +
-                    $"flightNumber = {flightNumber}, originAirportId = {originAirportId}, destinationAirportId = {destinationAirportId}");
-                throw new ArgumentException("Invalid argument provided");
-            }
-
             if (!flightNumber.isPositive())
             {
                 Console.WriteLine($"Could not find flight in GetFlightByFlightNumber! flightNumber = {flightNumber}");

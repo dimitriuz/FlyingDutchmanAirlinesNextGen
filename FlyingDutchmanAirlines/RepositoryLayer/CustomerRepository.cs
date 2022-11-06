@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,7 +16,14 @@ namespace FlyingDutchmanAirlines.RepositoryLayer
     public class CustomerRepository
     {
         private readonly FlyingDutchmanAirlinesContext _context;
-
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public CustomerRepository()
+        {
+            if (Assembly.GetExecutingAssembly().FullName == Assembly.GetCallingAssembly().FullName)
+            {
+                throw new Exception("This constructor should only be used for testing");
+            }
+        }
         public CustomerRepository(FlyingDutchmanAirlinesContext context)
         {
             _context = context;
@@ -49,7 +58,7 @@ namespace FlyingDutchmanAirlines.RepositoryLayer
             return string.IsNullOrEmpty(name) || name.Any(x => forbiddenCharacters.Contains(x));
         }
 
-        public async Task<Customer> GetCustomerByName(string name)
+        public virtual async Task<Customer> GetCustomerByName(string name)
         {
             if(IsInvalidCustomerName(name))
             {
